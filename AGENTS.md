@@ -10,7 +10,7 @@ Study Groups helps TU-Sofia students find, join and organize study groups and se
 - Run the lecture MCP server: `npm run --silent mcp`.
 - Check the Exercise 2 specification: `node checks/ex2.mjs`.
 - Test the lecture MCP server: `node mcp-server/check.mjs -- node mcp-server/server.js`.
-- Application run, tests and coverage are pending. The current `npm test` script is the template placeholder.
+- Run `npm test` to check the Exercise 2 specification and the Exercise 1 MCP server. Application startup, application tests and coverage are pending.
 
 ## Conventions
 - Planned folders are `web/` for React/Vite, `src/http/` for Express, `src/services/` for business rules, `src/data/` for Prisma access and `prisma/` for schema and migrations.
