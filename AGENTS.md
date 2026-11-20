@@ -3,22 +3,20 @@
 Read this file at the start of every session. Keep it short and correct; update it when the project changes.
 
 ## Project
-<!-- One or two sentences: what the app does and for whom. Link SPEC.md. -->
-See `SPEC.md` for goals, non-goals and acceptance criteria.
+Study Groups helps TU-Sofia students find, join and organize study groups and sessions. See [SPEC.md](SPEC.md).
 
 ## Commands
-<!-- How to install, run, test. Keep these exact and working. -->
-- Install: 
-- Run: 
-- Test: 
-- Coverage: 
-- MCP server: 
+- Install: No application dependencies at this stage. Run the checks with Node.js 22 from the repository root.
+- Run the lecture MCP server: `npm run --silent mcp`.
+- Check the Exercise 2 specification: `node checks/ex2.mjs`.
+- Test the lecture MCP server: `node mcp-server/check.mjs -- node mcp-server/server.js`.
+- Run `npm test` to check the Exercise 2 specification and the Exercise 1 MCP server. Application startup, application tests and coverage are pending.
 
 ## Conventions
-<!-- Folder layout, naming, where business rules live, how errors are returned to the client. -->
+- Planned folders are `web/` for React/Vite, `src/http/` for Express, `src/services/` for business rules, `src/data/` for Prisma access and `prisma/` for schema and migrations.
+- Validate transport input at the boundary. Services return domain errors, and HTTP handlers map them to status codes and readable messages.
 
 ## Layers
-<!-- Fill in the file or folder for each layer. -->
 Requests arrive two ways and both end in the same place:
 
 - HTTP route handler → service → data access → database
@@ -29,22 +27,19 @@ rules and knows nothing about HTTP or about MCP. Only the data layer writes SQL.
 that talks to the database directly is a second, unguarded way into your data: never add one.
 
 ## The model feature
-<!-- Provider, env var, and the call site. -->
-- The provider is named in exactly one file: 
+- Keep the provider integration in one adapter in `src/model/`, called by the recommendation service. Configure it with `OPENAI_MODEL` and `OPENAI_API_KEY`.
 - The key comes from an environment variable and is never committed or logged.
 - Every call has a timeout and a deterministic fallback, so the app still works when the provider is down or rate-limited.
 - The model's output is re-checked against real data before anything is saved or shown.
 - Tests never call the provider: they pass in a fake client.
 
 ## The MCP server
-<!-- Where it lives and how it authenticates. -->
-- Lives in `mcp-server/`, grew out of Exercise 1.
-- Every tool calls a service function; none touches the data layer or the database directly.
-- It carries a user, and enforces exactly the same authorization rules as the HTTP API.
+- Preserve the Exercise 1 lecture tools in `mcp-server/`.
+- The planned project tools call the same services as HTTP. They resolve the user via `MCP_TOKEN` and enforce the same authorization rules.
 - Adding a tool means adding a row to the table in `SPEC.md` too.
 
 ## Tests and coverage
-- Every acceptance criterion in `SPEC.md` has an id like `AC-3`, and a test whose title contains that id.
+- Give each criterion in `SPEC.md` a unique AC id. When implementing it, add a test whose title contains that id.
 - The coverage gate runs in CI: 100% of the service layer, 80% overall.
 - A test is evidence. Changing a test so the code passes destroys the evidence.
 
